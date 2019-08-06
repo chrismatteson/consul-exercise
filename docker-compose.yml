@@ -12,11 +12,30 @@ services:
     restart: always
     networks:
     - network
-  picture-service:
+  picture-service-dogs:
     image: "grovemountain/picture-service:latest"
     ports:
       - "8080:8080"
-      - "19000:19000"
+    environment:
+      - NAME=dogs
+    restart: always
+    networks:
+    - network
+  picture-service-cats:
+    image: "grovemountain/picture-service:latest"
+    ports:
+      - "8081:8080"
+    environment:
+      - NAME=cats
+    restart: always
+    networks:
+    - network
+  picture-service-rabbits:
+    image: "grovemountain/picture-service:latest"
+    ports:
+      - "8082:8080"
+    environment:
+      - NAME=rabbits
     restart: always
     networks:
     - network
@@ -24,7 +43,6 @@ services:
     image: "grovemountain/consul-demo-gateway:latest"
     ports:
       - "8000:8000"
-#      - "19001:19000"
     volumes:
       - "./static/holy_grail.json:/app/static/holy_grail.json"
     restart: always
@@ -38,17 +56,35 @@ services:
     restart: always
     networks:
     - network
-  picture-proxy:
+  picture-proxy-dogs:
     image: "grovemountain/consul-envoy:1.6.0-beta3-v1.11.0"
     entrypoint: "/wait_for_consul.sh"
     environment:
       - CONSUL_HTTP_ADDR=http://consul:8500
-    command: "consul connect envoy -sidecar-for picture-service"
-    network_mode: "service:picture-service"
+      - CONSUL_GRPC_ADDR=consul:8502
+    command: "consul connect envoy -sidecar-for dogs"
+    network_mode: "service:picture-service-dogs"
+  picture-proxy-cats:
+    image: "grovemountain/consul-envoy:1.6.0-beta3-v1.11.0"
+    entrypoint: "/wait_for_consul.sh"
+    environment:
+      - CONSUL_HTTP_ADDR=http://consul:8500
+      - CONSUL_GRPC_ADDR=consul:8502
+    command: "consul connect envoy -sidecar-for cats"
+    network_mode: "service:picture-service-cats"
+  picture-proxy-rabbits:
+    image: "grovemountain/consul-envoy:1.6.0-beta3-v1.11.0"
+    entrypoint: "/wait_for_consul.sh"
+    environment:
+      - CONSUL_HTTP_ADDR=http://consul:8500
+      - CONSUL_GRPC_ADDR=consul:8502
+    command: "consul connect envoy -sidecar-for rabbits"
+    network_mode: "service:picture-service-rabbits"
   client-proxy:
     image: "grovemountain/consul-envoy:1.6.0-beta3-v1.11.0"
     entrypoint: "/wait_for_consul.sh"
     environment:
       - CONSUL_HTTP_ADDR=http://consul:8500
+      - CONSUL_GRPC_ADDR=consul:8502
     command: "consul connect envoy -sidecar-for client"
     network_mode: "service:consul-demo-gateway"
