@@ -1,0 +1,39 @@
+version: '3'
+networks:
+  network:
+    driver: bridge
+services:
+  consul:
+    image: "grovemountain/consul:1.6.0-beta3"
+    ports:
+      - "8500:8500"
+#    command: "agent -server -ui -bootstrap-expect=1 -config-file /etc/consul/envoy_demo.hcl"
+    volumes:
+      - "./envoy_demo.hcl:/consul/config/envoy_demo.hcl" 
+    restart: always
+    networks:
+    - network
+  picture-service:
+    image: "grovemountain/picture-service:latest"
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+    - network
+  consul-demo-gateway:
+    image: "grovemountain/consul-demo-gateway:latest"
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./static/holy_grail.json:/app/static/holy_grail.json"
+    restart: always
+    networks:
+    - network
+  consul-template:
+    image: "hashicorp/consul-template:latest"
+    command: "-template /static/in.tpl:/static/holy_grail.json -consul-addr consul:8500"
+    volumes:
+      - "./static:/static"
+    restart: always
+    networks:
+    - network
