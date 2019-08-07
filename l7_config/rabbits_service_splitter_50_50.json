@@ -1,0 +1,13 @@
+{
+  "kind": "service-splitter",
+  "name": "rabbits",
+  "splits": [
+    {
+      "weight": 50
+    },
+    {
+      "weight": 50,
+      "service": "rabbits-2"
+    }
+  ]
+}

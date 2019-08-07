@@ -45,7 +45,7 @@ services {
       checks = [
         {
            name = "Connect Sidecar Listening dogs"
-           http = "picture-service-dogs:21001"
+           tcp = "picture-service-dogs:21001"
            interval = "10s"
         },
         {
@@ -108,7 +108,7 @@ services {
       checks = [
         {
            name = "Connect Sidecar Listening dogs-2"
-           http = "picture-service-dogs-2:21004"
+           tcp = "picture-service-dogs-2:21004"
            interval = "10s"
         },
         {

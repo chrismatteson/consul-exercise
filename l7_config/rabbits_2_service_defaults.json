@@ -1,0 +1,5 @@
+{
+  "kind": "service-defaults",
+  "name": "rabbits-2",
+  "protocol": "http"
+}
