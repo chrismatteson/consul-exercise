@@ -1,7 +1,7 @@
 services {
   name = "client"
   port = 8000
-  address = "10.24.0.105"
+  address = "10.24.0.18"
   connect {
     sidecar_service {
       port = 21000
@@ -38,14 +38,14 @@ services {
 services {
   name = "dogs"
   port = 8080
-  address = "10.24.0.102"
+  address = "10.24.0.12"
   connect {
     sidecar_service {
       port = 21001
       checks = [
         {
            name = "Connect Sidecar Listening dogs"
-           tcp = "picture-service-dogs:21001"
+           http = "picture-service-dogs:21001"
            interval = "10s"
         },
         {
@@ -59,7 +59,7 @@ services {
 services {
   name = "cats"
   port = 8080
-  address = "10.24.0.103"
+  address = "10.24.0.13"
   connect {
     sidecar_service {
       port = 21002
@@ -80,7 +80,7 @@ services {
 services {
   name = "rabbits"
   port = 8080
-  address = "10.24.0.104"
+  address = "10.24.0.14"
   connect {
     sidecar_service {
       port = 21003
@@ -93,6 +93,69 @@ services {
         {
            name = "Connect Sidecar Aliasing rabbits"
            alias_service = "rabbits"
+        }
+      ]
+    }
+  }
+}
+services {
+  name = "dogs-2"
+  port = 8080
+  address = "10.24.0.15"
+  connect {
+    sidecar_service {
+      port = 21004
+      checks = [
+        {
+           name = "Connect Sidecar Listening dogs-2"
+           http = "picture-service-dogs-2:21004"
+           interval = "10s"
+        },
+        {
+           name = "Connect Sidecar Aliasing dogs-2"
+           alias_service = "dogs-2"
+        }
+      ]
+    }
+  }
+}
+services {
+  name = "cats-2"
+  port = 8080
+  address = "10.24.0.16"
+  connect {
+    sidecar_service {
+      port = 21005
+      checks = [
+        {
+           name = "Connect Sidecar Listening cats-2"
+           tcp = "picture-service-cats-2:21005"
+           interval = "10s"
+        },
+        {
+           name = "Connect Sidecar Aliasing cats-2"
+           alias_service = "cats-2"
+        }
+      ]
+    }
+  }
+}
+services {
+  name = "rabbits-2"
+  port = 8080
+  address = "10.24.0.17"
+  connect {
+    sidecar_service {
+      port = 21006
+      checks = [
+        {
+           name = "Connect Sidecar Listening rabbits-2"
+           tcp = "picture-service-rabbits-2:21006"
+           interval = "10s"
+        },
+        {
+           name = "Connect Sidecar Aliasing rabbits-2"
+           alias_service = "rabbits-2"
         }
       ]
     }
