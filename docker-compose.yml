@@ -2,6 +2,10 @@ version: '3'
 networks:
   network:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.24.0.0/24
 services:
   consul:
     image: "grovemountain/consul:1.6.0-beta3"
@@ -11,7 +15,8 @@ services:
       - "./envoy_demo.hcl:/consul/config/envoy_demo.hcl" 
     restart: always
     networks:
-    - network
+      network:
+        ipv4_address: 10.24.0.101
   picture-service-dogs:
     image: "grovemountain/picture-service:latest"
     ports:
@@ -20,7 +25,8 @@ services:
       - NAME=dogs
     restart: always
     networks:
-    - network
+      network:
+        ipv4_address: 10.24.0.102
   picture-service-cats:
     image: "grovemountain/picture-service:latest"
     ports:
@@ -29,7 +35,8 @@ services:
       - NAME=cats
     restart: always
     networks:
-    - network
+      network:
+        ipv4_address: 10.24.0.103
   picture-service-rabbits:
     image: "grovemountain/picture-service:latest"
     ports:
@@ -38,7 +45,8 @@ services:
       - NAME=rabbits
     restart: always
     networks:
-    - network
+      network:
+        ipv4_address: 10.24.0.104
   consul-demo-gateway:
     image: "grovemountain/consul-demo-gateway:latest"
     ports:
@@ -47,7 +55,8 @@ services:
       - "./static/holy_grail.json:/app/static/holy_grail.json"
     restart: always
     networks:
-    - network
+      network:
+       ipv4_address: 10.24.0.105
   consul-template:
     image: "hashicorp/consul-template:latest"
     command: "-template /static/in.tpl:/static/holy_grail.json -consul-addr consul:8500"
@@ -55,7 +64,8 @@ services:
       - "./static:/static"
     restart: always
     networks:
-    - network
+      network:
+        ipv4_address: 10.24.0.106
   picture-proxy-dogs:
     image: "grovemountain/consul-envoy:1.6.0-beta3-v1.11.0"
     entrypoint: "/wait_for_consul.sh"
